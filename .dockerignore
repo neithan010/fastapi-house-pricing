@@ -1,0 +1,19 @@
+# Ignorar archivos de Git
+.git
+.gitignore
+
+# Ignorar archivos de Python basura
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+
+# Ignorar base de datos local (¡Importante!)
+*.db
+*.sqlite3
+
+# Ignorar la propia carpeta de docker (ya no la necesitamos dentro de la imagen)
+docker/

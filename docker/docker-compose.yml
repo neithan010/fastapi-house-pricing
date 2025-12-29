@@ -1,0 +1,11 @@
+services:
+  api-casas:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: contenedor-casas-pro
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../casas.db:/app/casas.db
+    restart: always
