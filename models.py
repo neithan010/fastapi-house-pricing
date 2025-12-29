@@ -12,3 +12,7 @@ class HousePrediction(BaseModel):
     input_features: HouseFeatures
     prediccion_precio_clp: int
     mensaje: str
+
+class HouseSaved(HouseFeatures):
+    id: int
+    precio_estimado: int

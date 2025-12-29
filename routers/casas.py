@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Query
-from models import HouseFeatures, HousePrediction 
+from models import HouseFeatures, HousePrediction, HouseSaved
+from typing import List
 
 # Creamos el router. 
 # prefix="/casas" significa que TODAS las rutas aquí empezarán con /casas
@@ -36,7 +37,7 @@ def crear_casa(features: HouseFeatures):
 
     # Le asignamos id a la casa
     features_dict = features.model_dump()
-    features_dict["precio_estimado"] = precio_estimado
+    features_dict["precio_estimado"] = int(precio_estimado)
     features_dict["id"] = id_counter
 
     # Guardamos en la "base de datos"
@@ -45,10 +46,33 @@ def crear_casa(features: HouseFeatures):
     # Actualizamos el ID
     id_counter += 1
     return {
-        "input_features": features,
+        "input_features": features_dict,
         "prediccion_precio_clp": int(precio_estimado),
         "mensaje": "Predicción generada exitosamente"
     }
+
+# Endpoint para listar todas las casas guardadas
+@router.get("/", response_model=List[HouseSaved])
+def listar_casas():
+    return db_casas
+
+#Endpoint para obtener una casa por ID
+@router.get("/{casa_id}", response_model=HouseSaved)
+def obtener_casa(casa_id: int):
+    for casa in db_casas:
+        if casa["id"] == casa_id:
+            return casa
+    raise HTTPException(status_code=404, detail="Casa no encontrada")
+
+# Endpoint para eliminar una casa por ID
+@router.delete("/{casa_id}", response_model=None)
+def eliminar_casa(casa_id: int):
+    global db_casas
+    for index,casa in enumerate(db_casas):
+        if casa["id"] == casa_id:
+            db_casas.pop(index)
+            return 
+    raise HTTPException(status_code=404, detail="Casa no encontrada")
 
 # Podemos agregar más endpoints exclusivos de casas aquí
 @router.get("/ofertas/")
