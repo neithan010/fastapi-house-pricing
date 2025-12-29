@@ -6,11 +6,18 @@ from models import HouseFeatures, HousePrediction
 # tags=["Casas"] sirve para agruparlas bonito en la documentación azul
 router = APIRouter(prefix="/casas", tags=["Casas"])
 
+# Base de datos "falsa" de casa
+db_casas = []
+
+# Un simple contador para IDs de las casas.
+id_counter = 1
+
 # NOTA: Ya no ponemos "/casas/predict...", solo "/predict..." 
 # porque el prefix ya lo agrega automático.
-@router.post("/predict_price/", response_model=HousePrediction)
-def predict_price(features: HouseFeatures):
-    
+@router.post("/", response_model=HousePrediction)
+def crear_casa(features: HouseFeatures):
+    global id_counter
+
     # Validacion
     if features.metros_cuadrados < 10:
         raise HTTPException(status_code=400, detail="Casa muy pequeña, no se puede tasar.")
@@ -27,6 +34,16 @@ def predict_price(features: HouseFeatures):
     if features.habitaciones > 3:
         precio_estimado *= 1.10
 
+    # Le asignamos id a la casa
+    features_dict = features.model_dump()
+    features_dict["precio_estimado"] = precio_estimado
+    features_dict["id"] = id_counter
+
+    # Guardamos en la "base de datos"
+    db_casas.append(features_dict)
+
+    # Actualizamos el ID
+    id_counter += 1
     return {
         "input_features": features,
         "prediccion_precio_clp": int(precio_estimado),
