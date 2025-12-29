@@ -1,5 +1,9 @@
 from fastapi import FastAPI
-from routers import casas # <--- Importamos el router que creamos
+from routers import casas
+from database import engine
+import sql_models
+
+sql_models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="API de Tasación Inmobiliaria",

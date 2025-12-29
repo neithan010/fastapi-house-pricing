@@ -1,0 +1,19 @@
+# 1. Ignorar TODOS los archivos compilados (.pyc) donde sea que estén
+*.pyc
+
+# 2. Ignorar TODAS las carpetas __pycache__ (en la raíz y subcarpetas)
+__pycache__/
+
+# 3. Ignorar tu entorno virtual (¡Muy importante! No se sube el venv)
+venv/
+.venv/
+env/
+
+# 4. Ignorar la Base de Datos (¡CRÍTICO!)
+# No quieres subir tus datos de prueba a GitHub, ni sobreescribir la BD de producción
+*.db
+*.sqlite3
+
+# 5. Archivos de sistema molestos (Mac/Windows)
+.DS_Store
+Thumbs.db
