@@ -3,6 +3,7 @@ House price prediction logic.
 This is a simplified model for demonstration purposes.
 In a production environment, this would be replaced with a trained ML model.
 """
+from datetime import datetime
 from models import HouseFeatures, PricePrediction
 
 
@@ -43,7 +44,8 @@ class HousePricePredictor:
                      features.floors * self.floor_value)
         
         # Calculate age factor
-        age = 2025 - features.year_built
+        current_year = datetime.now().year
+        age = current_year - features.year_built
         if features.year_built >= 2020:
             age_factor = self.new_home_bonus
         else:
@@ -90,7 +92,8 @@ class HousePricePredictor:
             confidence -= 0.1
         
         # Penalize very old houses
-        age = 2025 - features.year_built
+        current_year = datetime.now().year
+        age = current_year - features.year_built
         if age > 100:
             confidence -= 0.15
         
